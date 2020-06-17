@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/chm-diederichs/chacha20-universal/issues"
   },
-  "homepage": "https://github.com/chm-diederichs/chacha20-universal#readme"
+  "homepage": "https://github.com/chm-diederichs/chacha20-universal#readme",
+  "dependencies": {
+    "nanoassert": "^2.0.0"
+  }
 }

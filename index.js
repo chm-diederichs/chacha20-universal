@@ -4,9 +4,12 @@ module.exports = Chacha20
 
 const constant = [1634760805, 857760878, 2036477234, 1797285236]
 
-function Chacha20 (n, k, counter) {
-  assert(k.byteLength === 32)
-  assert(n.byteLength === 8 || n.byteLength === 12)
+function Chacha20 (nonce, key, counter) {
+  assert(key.byteLength === 32)
+  assert(nonce.byteLength === 8 || nonce.byteLength === 12)
+
+  const n = new Uint32Array(nonce.buffer, nonce.byteOffset, nonce.byteLength / 4)
+  const k = new Uint32Array(key.buffer, key.byteOffset, key.byteLength / 4)
 
   if (!counter) counter = 0
   assert(counter < Number.MAX_SAFE_INTEGER)
@@ -16,18 +19,18 @@ function Chacha20 (n, k, counter) {
   this.state = new Uint32Array(16)
 
   for (let i = 0; i < 4; i++) this.state[i] = constant[i]
-  for (let i = 0; i < 8; i++) this.state[4 + i] = readUInt32LE(k, 4 * i)
+  for (let i = 0; i < 8; i++) this.state[4 + i] = k[i]
 
   this.state[12] = counter & 0xffffffff
 
   if (n.byteLength === 8) {
     this.state[13] = (counter && 0xffffffff00000000) >> 32
-    this.state[14] = readUInt32LE(n, 0)
-    this.state[15] = readUInt32LE(n, 4)
+    this.state[14] = n[0]
+    this.state[15] = n[1]
   } else {
-    this.state[13] = readUInt32LE(n, 0)
-    this.state[14] = readUInt32LE(n, 4)
-    this.state[15] = readUInt32LE(n, 8)
+    this.state[13] = n[0]
+    this.state[14] = n[1]
+    this.state[15] = n[2]
   }
 
   return this
@@ -129,14 +132,4 @@ function QR (obj, a, b, c, d) {
   obj[c] += obj[d]
   obj[b] ^= obj[c]
   obj[b] = rotl(obj[b], 7)
-}
-
-function readUInt32LE (buf, offset) {
-  if (Buffer.isBuffer(buf)) return buf.readUInt32LE(offset)
-  else if (buf instanceof Uint8Array) {
-    var ret = 0
-    for (let i = 0; i < 4; i++) ret |= buf[offset + i] << (8 * i)
-    return ret
-  }
-  assert(false, 'buf should be a Buffer or a Uint8Array')
 }

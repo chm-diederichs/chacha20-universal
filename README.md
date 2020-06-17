@@ -32,7 +32,7 @@ xor.finalize()
 
 Create a new xor instance.
 
-`n` should be a 12 byte nonce passed as a buffer/uint8array and `k` should be a 32 byte key. An optional `counter` may be passed as a number.
+`nonce` should be a 12 byte buffer/uint8array and `key` should be 32 byte. An optional `counter` may be passed as a number.
 
 #### `xor.update(output, input)`
 

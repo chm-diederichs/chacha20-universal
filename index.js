@@ -80,6 +80,8 @@ Chacha20.prototype.update = function (output, input) {
 }
 
 Chacha20.prototype.final = function () {
+  this.state.fill(0)
+  this.pos = 0
   this.finalized = true
 }
 

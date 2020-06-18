@@ -109,7 +109,7 @@ function chacha20Block (state) {
     ws[i] += state[i]
   }
 
-  return Buffer.from(ws.buffer, ws.byteOffset, ws.byteLength)
+  return new Uint8Array(ws.buffer, ws.byteOffset, ws.byteLength)
 }
 
 function rotl (a, b) {
